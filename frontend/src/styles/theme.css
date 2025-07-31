@@ -1,0 +1,21 @@
+:root {
+  --primary: #4a90e2; /* calm blue */
+  --light: #f4f8fb;
+  --text-dark: #333;
+  --text-light: #fff;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--light);
+  color: var(--text-dark);
+}
+
+button {
+  background-color: var(--primary);
+  color: var(--text-light);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}

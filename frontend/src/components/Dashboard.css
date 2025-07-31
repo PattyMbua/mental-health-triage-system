@@ -1,0 +1,35 @@
+.dashboard-student,
+.dashboard-mentor,
+.dashboard-psychologist {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2, h3 {
+  color: #2c3e50;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f4f8fb;
+  border-radius: 6px;
+  border-left: 4px solid #4682B4;
+}
+
+a {
+  display: inline-block;
+  margin-top: 20px;
+  color: #4682B4;
+  text-decoration: underline;
+}

@@ -1,0 +1,54 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f8fb;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #4682B4;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+.dashboard-student,
+.dashboard-mentor,
+.dashboard-psychologist,
+.schedule-appointment,
+.resource-library,
+.login-page {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form input,
+form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  background-color: #4682B4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
