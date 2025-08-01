@@ -1,30 +1,44 @@
 import React from 'react';
+import './Resources.css';
 
 const resources = [
   {
-    title: "Coping with Exam Stress",
-    url: "https://www.mentalhealth.org.uk/exams",
-    rating: 5,
+    title: "Mental Health Kenya",
+    description: "Support and resources for mental health in Kenya.",
+    link: "https://mental.health.go.ke/"
   },
   {
-    title: "Managing Anxiety",
-    url: "https://www.mind.org.uk/information-support/types-of-mental-health-problems/anxiety/",
-    rating: 4,
+    title: "Mindfulness App",
+    description: "A free app for guided meditations and stress relief.",
+    link: "https://www.calm.com/"
   },
+  {
+    title: "Strathmore Mentoring Office",
+    description: "Book mentoring support for academic stress, peer issues, or personal guidance.",
+    link: "https://www.strathmore.edu/mentoring"
+  },
+  {
+    title: "OpenCounseling (Free Resources)",
+    description: "Free therapy content, crisis support and local therapists.",
+    link: "https://www.opencounseling.com/"
+  }
 ];
 
-const ResourceLibrary = () => {
+const Resources = () => {
   return (
-    <div className="resource-library">
+    <div className="resources-page">
       <h2>Helpful Resources</h2>
-      {resources.map((res, i) => (
-        <div key={i} className="resource-item">
-          <a href={res.url} target="_blank" rel="noopener noreferrer">{res.title}</a>
-          <p>Rating: {res.rating}/5</p>
-        </div>
-      ))}
+      <div className="resource-list">
+        {resources.map((r, index) => (
+          <div className="resource-card" key={index}>
+            <h3>{r.title}</h3>
+            <p>{r.description}</p>
+            <a href={r.link} target="_blank" rel="noreferrer">Visit Site</a>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default ResourceLibrary;
+export default Resources;

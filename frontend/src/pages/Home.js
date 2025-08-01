@@ -8,7 +8,7 @@ const Home = () => {
       <section className="hero">
         <div className="hero-text">
           <h1>Strathmore Mental Health Triage System</h1>
-          <p>Support is just a click away. Whether you're feeling overwhelmed, anxious, or just need someone to talk to — we're here for you.</p>
+          <p>Your wellbeing matters. We're here to help — confidentially and professionally.</p>
           <p className="helpline">📞 Helpline: <strong>0703 034 200</strong></p>
         </div>
       </section>
@@ -16,25 +16,25 @@ const Home = () => {
       <section className="services">
         <div className="service-card">
           <h2>📝 Self-Assessment</h2>
-          <p>Answer a few short questions to help us guide you to the right support.</p>
+          <p>Answer a few quick questions to find out what kind of support you may need.</p>
           <Link to="/login">
-            <button>Take Assessment</button>
+            <button className="home-button">Take Assessment</button>
           </Link>
         </div>
 
         <div className="service-card">
           <h2>📅 Book Appointment</h2>
-          <p>Schedule a session with a mentor or psychologist at your convenience.</p>
+          <p>Schedule a session with a mentor or psychologist who can help.</p>
           <Link to="/login">
-            <button>Book Now</button>
+            <button className="home-button">Book Now</button>
           </Link>
         </div>
 
         <div className="service-card">
           <h2>📚 Mental Health Resources</h2>
-          <p>Access helpful tools, videos, articles and self-care guides anytime.</p>
+          <p>View articles, self-care tips, and wellness tools 24/7.</p>
           <Link to="/resources">
-            <button>Explore</button>
+            <button className="home-button">Explore</button>
           </Link>
         </div>
       </section>

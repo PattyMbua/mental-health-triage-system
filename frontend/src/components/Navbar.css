@@ -9,26 +9,29 @@
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 10;
+  z-index: 1000;
 }
 
 .navbar-logo {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 22px;
   color: #003366;
+  text-decoration: none;
 }
 
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 25px;
   margin: 0;
+  padding: 0;
 }
 
 .navbar-links li a {
   text-decoration: none;
   color: #0066cc;
   font-weight: 500;
+  font-size: 16px;
   transition: color 0.2s ease;
 }
 
