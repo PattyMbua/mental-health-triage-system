@@ -2,6 +2,8 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+from backend.triage import admin
 from .models import TriageCase, User
 from .serializers import TriageCaseSerializer, LoginSerializer
 
@@ -20,4 +22,6 @@ class LoginView(APIView):
                 "role": user.role,
                 "username": user.username
             })
-        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"success": False, "errors": serializer.errors},
+         status=status.HTTP_400_BAD_REQUEST)
+    

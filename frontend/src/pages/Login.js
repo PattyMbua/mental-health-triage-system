@@ -10,12 +10,24 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
-        email,
+      const res = await axios.post('http://localhost:8000/api/auth/login/', {
+        username: email, // Django expects "username"
         password
       });
 
-      setFeedback(`✅ Welcome, ${res.data.user.name}`);
+      if (res.data.success) {
+        setFeedback(`✅ Welcome, ${res.data.username}`);
+        // Redirect based on role
+        if (res.data.role === 'student') {
+          window.location.href = '/student-dashboard';
+        } else if (res.data.role === 'mentor') {
+          window.location.href = '/mentor-dashboard';
+        } else if (res.data.role === 'psychologist') {
+          window.location.href = '/psychologist-dashboard';
+        }
+      } else {
+        setFeedback('❌ Login failed: Invalid credentials');
+      }
     } catch (error) {
       setFeedback('❌ Login failed: Invalid credentials');
     }
