@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [feedback, setFeedback] = useState('');
 
@@ -11,7 +11,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:8000/api/auth/login/', {
-        username: email, // Django expects "username"
+        username,
         password
       });
 
@@ -37,12 +37,12 @@ const Login = () => {
     <div className="login-page">
       <form onSubmit={handleLogin}>
         <h2>Login</h2>
-        <label>Email or ID:</label>
+        <label>Username or ID:</label>
         <input
           type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter username or ID"
         />
 
         <label>Password:</label>

@@ -1,12 +1,13 @@
 // src/components/DashboardStudent.js
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Dashboard.css'; // optional styling
 
 const DashboardStudent = () => {
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
-    // Mock fetch from backend (replace with API call later)
+    // Mock fetch from backend (replace with real API call later)
     fetch('/mockBackend.json')
       .then((res) => res.json())
       .then((data) => {
@@ -31,9 +32,14 @@ const DashboardStudent = () => {
         ))}
       </ul>
 
-      <a href="/schedule" style={{ color: '#4682B4', textDecoration: 'underline' }}>
-        + Schedule a New Appointment
-      </a>
+      <div style={{ marginTop: '2em' }}>
+        <Link to="/schedule" style={{ color: '#4682B4', textDecoration: 'underline', marginRight: '2em' }}>
+          + Schedule a New Appointment
+        </Link>
+        <Link to="/assessment" style={{ color: '#4682B4', textDecoration: 'underline' }}>
+          + Take Self-Assessment
+        </Link>
+      </div>
     </div>
   );
 };

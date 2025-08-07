@@ -8,19 +8,21 @@ import ScheduleAppointment from './components/ScheduleAppointment';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Resources from './pages/Resources';
+import AssessmentForm from './components/AssessmentForm';
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} /> {/* ✅ Set Home as default */}
-        <Route path="/login" element={<Login />} /> {/* ✅ Route Login correctly */}
+        <Route path="/" element={<Home />} /> {/* Home as default */}
+        <Route path="/login" element={<Login />} />
         <Route path="/student-dashboard" element={<DashboardStudent />} />
         <Route path="/mentor-dashboard" element={<DashboardMentor />} />
         <Route path="/psychologist-dashboard" element={<DashboardPsychologist />} />
         <Route path="/schedule" element={<ScheduleAppointment />} />
         <Route path="/resources" element={<Resources />} />
+        <Route path="/assessment" element={<AssessmentForm />} />
       </Routes>
     </Router>
   );
