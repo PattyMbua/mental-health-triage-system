@@ -1,46 +1,51 @@
 // src/components/DashboardStudent.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Dashboard.css'; // optional styling
+import DashboardNavbar from '../components/DashboardNavbar';
+// import './Dashboard.css';
 
 const DashboardStudent = () => {
   const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock fetch from backend (replace with real API call later)
     fetch('/mockBackend.json')
       .then((res) => res.json())
       .then((data) => {
-        const studentSessions = data.sessions.filter(s => s.studentId === 'STU123'); // hardcoded for demo
+        const studentSessions = data.sessions.filter(s => s.studentId === 'STU123');
         setSessions(studentSessions);
+        setLoading(false);
       });
   }, []);
 
   return (
-    <div className="dashboard-student">
-      <h2>Welcome, Student</h2>
-      <p>View your past sessions and manage your mental wellness here.</p>
+    <>
+      <DashboardNavbar role="Student" />
+      <div className="dashboard-content">
+        <h2>Welcome, Student 👋</h2>
+        <p>Manage your mental wellness and view session history.</p>
 
-      <h3>Your Past Sessions</h3>
-      <ul>
-        {sessions.map((session, index) => (
-          <li key={index}>
-            <strong>Date:</strong> {session.date}<br />
-            <strong>With:</strong> {session.with}<br />
-            <strong>Feedback:</strong> {session.feedback}
-          </li>
-        ))}
-      </ul>
+        <div style={{ marginTop: '2em' }}>
+          <Link to="/schedule" className="dashboard-link">+ Schedule a New Appointment</Link>
+          <Link to="/assessment" className="dashboard-link">+ Take Self-Assessment</Link>
+        </div>
 
-      <div style={{ marginTop: '2em' }}>
-        <Link to="/schedule" style={{ color: '#4682B4', textDecoration: 'underline', marginRight: '2em' }}>
-          + Schedule a New Appointment
-        </Link>
-        <Link to="/assessment" style={{ color: '#4682B4', textDecoration: 'underline' }}>
-          + Take Self-Assessment
-        </Link>
+        <h3>Your Past Sessions</h3>
+        {loading ? (
+          <p>Loading sessions...</p>
+        ) : (
+          <ul className="session-list">
+            {sessions.map((session, index) => (
+              <li key={index} className="session-item">
+                <strong>Date:</strong> {session.date}<br />
+                <strong>With:</strong> {session.with}<br />
+                <strong>Feedback:</strong> {session.feedback}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

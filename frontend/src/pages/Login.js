@@ -14,19 +14,13 @@ const Login = () => {
     try {
       const res = await axios.post('http://localhost:8000/api/auth/login/', {
         username,
-        password
+        password,
       });
 
       if (res.data.success) {
+        localStorage.setItem('userRole', res.data.role);
         setFeedback(`✅ Welcome, ${res.data.username}`);
-        // Redirect based on role
-        if (res.data.role === 'student') {
-          window.location.href = '/student-dashboard';
-        } else if (res.data.role === 'mentor') {
-          window.location.href = '/mentor-dashboard';
-        } else if (res.data.role === 'psychologist') {
-          window.location.href = '/psychologist-dashboard';
-        }
+        redirectToDashboard(res.data.role);
       } else {
         setFeedback('❌ Login failed: Invalid credentials');
       }
@@ -35,28 +29,22 @@ const Login = () => {
     }
   };
 
-  // Google login handler
   const handleGoogleSuccess = async (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
-    // Only allow Strathmore emails
     if (!decoded.email.endsWith('@strathmore.edu')) {
       setFeedback('❌ Only Strathmore accounts are allowed.');
       return;
     }
+
     try {
-      // Send Google token to backend for verification/login
       const res = await axios.post('http://localhost:8000/api/auth/google-login/', {
         token: credentialResponse.credential,
       });
+
       if (res.data.success) {
+        localStorage.setItem('userRole', res.data.role);
         setFeedback(`✅ Welcome, ${res.data.username}`);
-        if (res.data.role === 'student') {
-          window.location.href = '/student-dashboard';
-        } else if (res.data.role === 'mentor') {
-          window.location.href = '/mentor-dashboard';
-        } else if (res.data.role === 'psychologist') {
-          window.location.href = '/psychologist-dashboard';
-        }
+        redirectToDashboard(res.data.role);
       } else {
         setFeedback('❌ Google login failed.');
       }
@@ -65,10 +53,27 @@ const Login = () => {
     }
   };
 
+  const redirectToDashboard = (role) => {
+    switch (role) {
+      case 'student':
+        window.location.href = '/student-dashboard';
+        break;
+      case 'mentor':
+        window.location.href = '/mentor-dashboard';
+        break;
+      case 'psychologist':
+        window.location.href = '/psychologist-dashboard';
+        break;
+      default:
+        setFeedback('❌ Unknown role.');
+    }
+  };
+
   return (
     <div className="login-page">
       <form onSubmit={handleLogin}>
         <h2>Login</h2>
+
         <label>Username or ID:</label>
         <input
           type="text"
@@ -86,14 +91,19 @@ const Login = () => {
         />
 
         <button type="submit">Login</button>
-        <p>{feedback}</p>
+        {feedback && <p style={{ textAlign: 'center', marginTop: '10px' }}>{feedback}</p>}
+
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setFeedback('❌ Google login failed.')}
+            useOneTap
+            width="100%"
+            shape="pill"
+            theme="outline"
+          />
+        </div>
       </form>
-      <div style={{ marginTop: '1em' }}>
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => setFeedback('❌ Google login failed.')}
-        />
-      </div>
     </div>
   );
 };

@@ -1,0 +1,16 @@
+{
+  "sessions": [
+    {
+      "studentId": "STU123",
+      "date": "2025-08-01",
+      "with": "Dr. Grace (Psychologist)",
+      "feedback": "Helpful discussion on anxiety management."
+    },
+    {
+      "studentId": "STU123",
+      "date": "2025-07-10",
+      "with": "Mentor Daniel",
+      "feedback": "Guidance on time management techniques."
+    }
+  ]
+}

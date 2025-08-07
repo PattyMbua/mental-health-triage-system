@@ -9,6 +9,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Resources from './pages/Resources';
 import AssessmentForm from './components/AssessmentForm';
+import NotFound from './pages/NotFound';
+import DashboardNavbar from './components/DashboardNavbar';
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
         <Route path="/schedule" element={<ScheduleAppointment />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/assessment" element={<AssessmentForm />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

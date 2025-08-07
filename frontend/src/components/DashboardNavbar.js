@@ -1,17 +1,24 @@
+// src/components/DashboardNavbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './DashboardNavbar.css';
+import './Dashboard.css';
 
 const DashboardNavbar = ({ role }) => {
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  };
+
   return (
-    <nav className="dashboard-navbar">
-      <div className="dashboard-logo">SUMC | {role} Dashboard</div>
+    <div className="dashboard-navbar">
+      <div className="dashboard-logo">Mental Health System ({role})</div>
       <ul className="dashboard-links">
-        <li><Link to="/">🏠 Home</Link></li>
-        <li><Link to="/resources">📚 Resources</Link></li>
-        <li><Link to="/login">🚪 Logout</Link></li>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/schedule">Schedule</Link></li>
+        <li><Link to="/assessment">Assessment</Link></li>
+        <li><button onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}>Logout</button></li>
       </ul>
-    </nav>
+    </div>
   );
 };
 

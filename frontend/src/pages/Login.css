@@ -63,3 +63,18 @@ body, html {
 .login-page button:hover {
   background-color: #004a99;
 }
+
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5em;
+}
+
+.google-login-wrapper div {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.google-login-wrapper div:hover {
+  transform: scale(1.2);
+}

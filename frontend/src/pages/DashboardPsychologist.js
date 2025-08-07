@@ -1,15 +1,19 @@
+// src/pages/DashboardPsychologist.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import DashboardNavbar from '../components/DashboardNavbar';
 
 const DashboardPsychologist = () => {
   return (
-    <div className="dashboard-psychologist">
-      <h1>Psychologist Dashboard</h1>
-      <p>Manage clinical cases and your availability.</p>
-      <ul>
-        <li><Link to="/schedule">Set Appointment Slots</Link></li>
-        <li><Link to="/appointments">View Scheduled Sessions</Link></li>
-      </ul>
+    <div>
+      <DashboardNavbar role="Psychologist" />
+      <div className="dashboard-content">
+        <h2>🧠 Psychologist Dashboard</h2>
+        <p>Manage clinical cases, review notes, and handle appointments.</p>
+        <ul>
+          <li><a href="/appointments">View Clinical Sessions</a></li>
+          <li><a href="/schedule">Set Appointment Slots</a></li>
+        </ul>
+      </div>
     </div>
   );
 };
