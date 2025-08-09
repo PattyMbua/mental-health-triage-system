@@ -1,6 +1,6 @@
 // src/pages/DashboardPsychologist.js
 import React from 'react';
-import DashboardNavbar from '../components/DashboardNavbar';
+import DashboardNavbar from '../../components/navbars/DashboardNavbar';
 
 const DashboardPsychologist = () => {
   return (

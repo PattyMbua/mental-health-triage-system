@@ -1,23 +1,31 @@
+// src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Login from './pages/Login';
-import DashboardStudent from './pages/DashboardStudent';
-import DashboardMentor from './pages/DashboardMentor';
-import DashboardPsychologist from './pages/DashboardPsychologist';
-import ScheduleAppointment from './components/ScheduleAppointment';
-import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Resources from './pages/Resources';
+import ScheduleAppointment from './components/ScheduleAppointment';
 import AssessmentForm from './components/AssessmentForm';
-import NotFound from './pages/NotFound';
-import DashboardNavbar from './components/DashboardNavbar';
 
-function App() {
+// adjust imports to reflect your folder moves:
+import DashboardStudent from './pages/dashboards/DashboardStudent';
+import DashboardMentor from './pages/dashboards/DashboardMentor';
+import DashboardPsychologist from './pages/dashboards/DashboardPsychologist';
+
+import Navbar from './components/navbars/Navbar'; // new path if moved
+
+function AppWrapper() {
+  const location = useLocation();
+  // hide global navbar on any dashboard route (add others as needed)
+  const hideGlobalNavbar = location.pathname.startsWith('/student-dashboard')
+    || location.pathname.startsWith('/mentor-dashboard')
+    || location.pathname.startsWith('/psychologist-dashboard');
+
   return (
-    <Router>
-      <Navbar />
+    <>
+      {!hideGlobalNavbar && <Navbar />}
       <Routes>
-        <Route path="/" element={<Home />} /> {/* Home as default */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/student-dashboard" element={<DashboardStudent />} />
         <Route path="/mentor-dashboard" element={<DashboardMentor />} />
@@ -25,10 +33,15 @@ function App() {
         <Route path="/schedule" element={<ScheduleAppointment />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/assessment" element={<AssessmentForm />} />
-        <Route path="*" element={<NotFound />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <AppWrapper />
+    </Router>
+  );
+}

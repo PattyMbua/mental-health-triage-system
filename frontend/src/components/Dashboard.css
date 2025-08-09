@@ -83,3 +83,43 @@
   padding: 20px 40px;
   font-family: 'Segoe UI', sans-serif;
 }
+/* .assessment-form {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+}
+
+.assessment-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #003366;
+}
+
+.assessment-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.assessment-form button {
+    background-color: #0055a5;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.assessment-form button:hover {
+    background-color: #003366;
+} */

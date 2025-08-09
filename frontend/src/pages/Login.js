@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { loginUser } from '../mockBackend';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import './Login.css';
@@ -11,46 +11,36 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post('http://localhost:8000/api/auth/login/', {
-        username,
-        password,
-      });
 
-      if (res.data.success) {
-        localStorage.setItem('userRole', res.data.role);
-        setFeedback(`✅ Welcome, ${res.data.username}`);
-        redirectToDashboard(res.data.role);
-      } else {
-        setFeedback('❌ Login failed: Invalid credentials');
-      }
-    } catch (error) {
+    // Use the mock login function
+    const res = loginUser(username, password);
+
+    if (res.success) {
+      localStorage.setItem('userRole', res.user.role);
+      setFeedback(`✅ Welcome, ${res.user.id}`);
+      redirectToDashboard(res.user.role);
+    } else {
       setFeedback('❌ Login failed: Invalid credentials');
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
+
     if (!decoded.email.endsWith('@strathmore.edu')) {
       setFeedback('❌ Only Strathmore accounts are allowed.');
       return;
     }
 
-    try {
-      const res = await axios.post('http://localhost:8000/api/auth/google-login/', {
-        token: credentialResponse.credential,
-      });
+    // Mock login success based on email domain
+    const mockGoogleUser = {
+      id: decoded.email,
+      role: 'student' // or assign based on email if needed
+    };
 
-      if (res.data.success) {
-        localStorage.setItem('userRole', res.data.role);
-        setFeedback(`✅ Welcome, ${res.data.username}`);
-        redirectToDashboard(res.data.role);
-      } else {
-        setFeedback('❌ Google login failed.');
-      }
-    } catch (error) {
-      setFeedback('❌ Google login failed.');
-    }
+    localStorage.setItem('userRole', mockGoogleUser.role);
+    setFeedback(`✅ Welcome, ${mockGoogleUser.id}`);
+    redirectToDashboard(mockGoogleUser.role);
   };
 
   const redirectToDashboard = (role) => {
