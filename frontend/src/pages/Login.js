@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { loginUser } from '../mockBackend';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import './Login.css';
@@ -11,36 +10,54 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setFeedback('');
 
-    // Use the mock login function
-    const res = loginUser(username, password);
+    try {
+      const response = await fetch('https://your-backend-url/api/login', {  // Replace with your backend URL
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (res.success) {
-      localStorage.setItem('userRole', res.user.role);
-      setFeedback(`✅ Welcome, ${res.user.id}`);
-      redirectToDashboard(res.user.role);
-    } else {
-      setFeedback('❌ Login failed: Invalid credentials');
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('userRole', data.user.role);
+        localStorage.setItem('authToken', data.token);  // Save JWT or token if any
+
+        setFeedback(`✅ Welcome, ${data.user.name || data.user.id}`);
+        redirectToDashboard(data.user.role);
+      } else {
+        setFeedback(`❌ Login failed: ${data.message || 'Invalid credentials'}`);
+      }
+    } catch (error) {
+      setFeedback(`❌ Login failed: ${error.message || 'Network error'}`);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
 
-    if (!decoded.email.endsWith('@strathmore.edu')) {
-      setFeedback('❌ Only Strathmore accounts are allowed.');
-      return;
+      if (!decoded.email.endsWith('@strathmore.edu')) {
+        setFeedback('❌ Only Strathmore accounts are allowed.');
+        return;
+      }
+
+      // Here you might want to verify the token with your backend for security
+      // For now, mock login success:
+      const mockGoogleUser = {
+        id: decoded.email,
+        role: 'student' // Adjust logic if needed based on email/domain
+      };
+
+      localStorage.setItem('userRole', mockGoogleUser.role);
+      setFeedback(`✅ Welcome, ${mockGoogleUser.id}`);
+      redirectToDashboard(mockGoogleUser.role);
+
+    } catch (error) {
+      setFeedback('❌ Invalid Google token.');
     }
-
-    // Mock login success based on email domain
-    const mockGoogleUser = {
-      id: decoded.email,
-      role: 'student' // or assign based on email if needed
-    };
-
-    localStorage.setItem('userRole', mockGoogleUser.role);
-    setFeedback(`✅ Welcome, ${mockGoogleUser.id}`);
-    redirectToDashboard(mockGoogleUser.role);
   };
 
   const redirectToDashboard = (role) => {
@@ -70,6 +87,7 @@ const Login = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter username or ID"
+          required
         />
 
         <label>Password:</label>
@@ -78,12 +96,14 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter password"
+          required
         />
 
         <button type="submit">Login</button>
-        {feedback && <p style={{ textAlign: 'center', marginTop: '10px' }}>{feedback}</p>}
 
-        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        {feedback && <p className="feedback">{feedback}</p>}
+
+        <div className="google-login-wrapper">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={() => setFeedback('❌ Google login failed.')}

@@ -1,4 +1,3 @@
-// src/components/navbars/DashboardNavbar.js
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./DashboardNavbar.css";
@@ -7,15 +6,14 @@ const DashboardNavbar = ({ userProp }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  // get user from prop or fallback to localStorage
   const user = userProp || JSON.parse(localStorage.getItem('user')) || null;
   const firstLetter = user?.name?.charAt(0)?.toUpperCase() || "";
 
   const handleLogout = () => {
-    // clear auth tokens and user data
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    // if you have cookies/session, optionally hit API logout endpoint
+    localStorage.removeItem('userRole');
+    setOpen(false);
     navigate('/login', { replace: true });
   };
 

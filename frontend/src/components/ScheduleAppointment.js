@@ -1,5 +1,6 @@
-// src/components/ScheduleAppointment.js
 import React, { useState } from 'react';
+import './ScheduleAppointment.css';
+import bannerImg from '../assets/schedule-banner.jpg';
 
 const ScheduleAppointment = () => {
   const [urgency, setUrgency] = useState('');
@@ -8,11 +9,11 @@ const ScheduleAppointment = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert(`Booking submitted!\nUrgency: ${urgency}\nNotes: ${notes}`);
-    // In real app: POST to backend or Firebase
   };
 
   return (
-    <div className="schedule-appointment">
+    <div className="schedule-container">
+      <img src={bannerImg} alt="Schedule Appointment" className="banner-img" />
       <h2>Schedule an Appointment</h2>
       <form onSubmit={handleSubmit}>
         <label>
