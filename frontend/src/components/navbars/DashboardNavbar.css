@@ -9,73 +9,77 @@
   position: sticky;
   top: 0;
   z-index: 999;
+  height: 60px;  /* make navbar taller */
+  box-sizing: border-box;
 }
 
-.dashboard-logo {
-  font-size: 18px;
+.dashboard-left .dashboard-logo {
+  font-size: 20px;
   font-weight: bold;
-}
-
-.dashboard-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-}
-
-.dashboard-links li a {
   color: white;
-  text-decoration: none;
+}
+
+.dashboard-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
   font-weight: 500;
-  padding: 6px 12px;
+  font-size: 16px;
+}
+
+.welcome {
+  white-space: nowrap;
+}
+
+.avatar-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background-color: #0055aa;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  user-select: none;
+}
+
+.user-dropdown .dropdown-menu {
+  position: absolute;
+  right: 30px;
+  top: 60px;
+  background: white;
+  color: #333;
   border-radius: 6px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  padding: 10px 0;
+  min-width: 130px;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.user-dropdown .dropdown-menu li {
+  list-style: none;
+  padding: 8px 20px;
+}
+
+.user-dropdown .dropdown-menu li button {
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  padding: 6px 0;
+  cursor: pointer;
+  font-weight: 600;
+  color: #003366;
   transition: background-color 0.2s ease;
 }
 
-.dashboard-links li a:hover {
-  background-color: #0055aa;
-}
-
-.dashboard-logo { font-weight:700; font-size:18px; }
-
-.dashboard-right { display:flex; align-items:center; gap:12px; }
-
-.welcome { margin-right:8px; font-size:14px; color:#333; }
-
-.avatar-btn {
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-  background:#f0f0f0;
-}
-
-.user-dropdown { position:relative; }
-
-.dropdown-menu {
-  position:absolute;
-  right:0;
-  margin-top:8px;
-  list-style:none;
-  padding:6px 0;
-  min-width:160px;
-  background:white;
-  border-radius:8px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.08);
-  border:1px solid #eee;
-  z-index: 1100;
-}
-
-.dropdown-menu li { padding:6px 12px; }
-
-.dropdown-menu li button {
-  width:100%;
-  background:transparent;
-  border:none;
-  text-align:left;
-  cursor:pointer;
-  padding:6px 0;
+.user-dropdown .dropdown-menu li button:hover {
+  background-color: #e6f0ff;
 }
