@@ -1,8 +1,20 @@
 from django.urls import path
-from .views import TriageCaseListCreateView, LoginView, GoogleLoginView
+from .views import (
+    GoogleLoginView,
+    AssessmentSubmitView,
+    MentorCasesView,
+    PsychologistCasesView,
+    UsernamePasswordLoginView,
+    FeedbackDashboardView,
+    AppointmentView,
+)
 
 urlpatterns = [
-    path('cases/', TriageCaseListCreateView.as_view(), name='triagecase-list-create'),
-    path('auth/login/', LoginView.as_view(), name='login'),
     path('auth/google-login/', GoogleLoginView.as_view(), name='google-login'),
+    path('assessment/submit/', AssessmentSubmitView.as_view(), name='assessment-submit'),
+    path('mentor/cases/', MentorCasesView.as_view(), name='mentor-cases'),
+    path('psychologist/cases/', PsychologistCasesView.as_view(), name='psychologist-cases'),
+    path('login', UsernamePasswordLoginView.as_view(), name='username-password-login'),
+    path('feedback/', FeedbackDashboardView.as_view(), name='feedback-dashboard'),
+    path('appointment/', AppointmentView.as_view(), name='appointment'),
 ]

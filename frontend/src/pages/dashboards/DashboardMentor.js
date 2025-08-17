@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import DashboardNavbar from '../../components/navbars/DashboardNavbar';
 import { FaCalendarAlt, FaUserFriends, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import './Dashboard.css';
 
+const BACKEND_URL = 'http://localhost:8000';
+
 const DashboardMentor = () => {
+  const [cases, setCases] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${BACKEND_URL}/api/mentor/cases/`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+    })
+    .then(res => setCases(res.data))
+    .catch(() => setCases([]));
+  }, []);
+
   return (
     <div>
       <DashboardNavbar role="Mentor" />
@@ -39,6 +52,15 @@ const DashboardMentor = () => {
             {/* Add dynamic data here */}
           </ul>
         </section>
+
+        <h2>Assigned Cases</h2>
+        <ul>
+          {cases.map(c => (
+            <li key={c.id}>
+              Student: {c.student} | Gender: {c.gender} | Result: {c.result}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

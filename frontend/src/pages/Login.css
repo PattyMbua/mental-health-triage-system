@@ -14,6 +14,13 @@ body, html {
   background-position: center;
   background-repeat: no-repeat;
   backdrop-filter: blur(2px);
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  position: relative;
 }
 
 .login-page form {
@@ -64,10 +71,27 @@ body, html {
   background-color: #004a99;
 }
 
+.feedback {
+  color: #d32f2f;
+  background: #fff3f3;
+  border: 1px solid #f8d7da;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  font-size: 1rem;
+  z-index: 2;
+  position: relative;
+}
+
 .google-login-wrapper {
+  margin-top: 1rem;
   display: flex;
-  justify-content: center;
-  margin-top: 1.5em;
+  flex-direction: column;
+  align-items: center;
+}
+
+.google-login-wrapper > div {
+  transform: scale(0.85); /* Reduce Google button size */
 }
 
 .google-login-wrapper div {
@@ -77,4 +101,10 @@ body, html {
 
 .google-login-wrapper div:hover {
   transform: scale(1.2);
+}
+
+.google-login-wrapper p {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #555;
 }

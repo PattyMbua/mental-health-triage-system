@@ -1,14 +1,34 @@
 import React, { useState } from 'react';
 import './ScheduleAppointment.css';
 import bannerImg from '../assets/schedule-banner.jpg';
+import axios from 'axios';
+
+const BACKEND_URL = 'http://localhost:8000';
 
 const ScheduleAppointment = () => {
   const [urgency, setUrgency] = useState('');
   const [notes, setNotes] = useState('');
+  const [feedback, setFeedback] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Booking submitted!\nUrgency: ${urgency}\nNotes: ${notes}`);
+    setFeedback('');
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/api/appointment/`,
+        { urgency, notes },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
+      );
+      if (response.data.success) {
+        setFeedback('✅ Appointment booked successfully!');
+        setUrgency('');
+        setNotes('');
+      } else {
+        setFeedback(`❌ ${response.data.error || 'Booking failed.'}`);
+      }
+    } catch (error) {
+      setFeedback('❌ Error booking appointment.');
+    }
   };
 
   return (
@@ -37,6 +57,7 @@ const ScheduleAppointment = () => {
         </label>
 
         <button type="submit">Submit Request</button>
+        {feedback && <p className="feedback">{feedback}</p>}
       </form>
     </div>
   );

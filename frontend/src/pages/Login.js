@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import './Login.css';
 
+const BACKEND_URL = 'http://localhost:8000';
+
 const Login = () => {
+  const [role, setRole] = useState('student'); // Default to student
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [feedback, setFeedback] = useState('');
@@ -13,7 +17,7 @@ const Login = () => {
     setFeedback('');
 
     try {
-      const response = await fetch('https://your-backend-url/api/login', {  // Replace with your backend URL
+      const response = await fetch(`${BACKEND_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -23,7 +27,7 @@ const Login = () => {
 
       if (response.ok) {
         localStorage.setItem('userRole', data.user.role);
-        localStorage.setItem('authToken', data.token);  // Save JWT or token if any
+        localStorage.setItem('authToken', data.token);
 
         setFeedback(`✅ Welcome, ${data.user.name || data.user.id}`);
         redirectToDashboard(data.user.role);
@@ -37,26 +41,18 @@ const Login = () => {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const decoded = jwtDecode(credentialResponse.credential);
-
-      if (!decoded.email.endsWith('@strathmore.edu')) {
-        setFeedback('❌ Only Strathmore accounts are allowed.');
-        return;
+      const response = await axios.post(`${BACKEND_URL}/api/auth/google-login/`, {
+        token: credentialResponse.credential,
+      });
+      if (response.data.success) {
+        localStorage.setItem('authToken', credentialResponse.credential);
+        setFeedback('✅ Google login successful!');
+        redirectToDashboard('student');
+      } else {
+        setFeedback(`❌ Google login failed: ${response.data.error || 'Unknown error.'}`);
       }
-
-      // Here you might want to verify the token with your backend for security
-      // For now, mock login success:
-      const mockGoogleUser = {
-        id: decoded.email,
-        role: 'student' // Adjust logic if needed based on email/domain
-      };
-
-      localStorage.setItem('userRole', mockGoogleUser.role);
-      setFeedback(`✅ Welcome, ${mockGoogleUser.id}`);
-      redirectToDashboard(mockGoogleUser.role);
-
     } catch (error) {
-      setFeedback('❌ Invalid Google token.');
+      setFeedback(`❌ Google login failed: ${error.response?.data?.error || error.message || 'Network error.'}`);
     }
   };
 
@@ -78,32 +74,16 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
-
-        <label>Username or ID:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter username or ID"
-          required
-        />
-
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter password"
-          required
-        />
-
-        <button type="submit">Login</button>
-
-        {feedback && <p className="feedback">{feedback}</p>}
-
-        <div className="google-login-wrapper">
+      <div>
+        <label>Select Role:</label>
+        <select value={role} onChange={e => setRole(e.target.value)}>
+          <option value="student">Student</option>
+          <option value="mentor">Mentor</option>
+          <option value="psychologist">Psychologist</option>
+        </select>
+      </div>
+      {role === 'student' ? (
+        <div className="google-login-wrapper" style={{ marginTop: '1rem' }}>
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={() => setFeedback('❌ Google login failed.')}
@@ -112,8 +92,32 @@ const Login = () => {
             shape="pill"
             theme="outline"
           />
+          <p style={{ marginTop: '0.5rem' }}>Login with your Strathmore Google account</p>
+          {feedback && <p className="feedback">{feedback}</p>}
         </div>
-      </form>
+      ) : (
+        <form onSubmit={handleLogin}>
+          <h2>Login</h2>
+          <label>Username or ID:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter username or ID"
+            required
+          />
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+            required
+          />
+          <button type="submit">Login</button>
+          {feedback && <p className="feedback">{feedback}</p>}
+        </form>
+      )}
     </div>
   );
 };

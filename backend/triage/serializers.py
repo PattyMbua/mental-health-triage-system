@@ -1,20 +1,17 @@
 from rest_framework import serializers
-from .models import TriageCase
+from .models import Feedback, TriageCase, Appointment
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = '__all__'
 
 class TriageCaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = TriageCase
         fields = '__all__'
-        from rest_framework import serializers
-from django.contrib.auth import authenticate
-from .models import User
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
-
-    def validate(self, data):
-        user = authenticate(username=data['username'], password=data['password'])
-        if user and user.is_active:
-            return user
-        raise serializers.ValidationError("Invalid credentials")
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = '__all__'
