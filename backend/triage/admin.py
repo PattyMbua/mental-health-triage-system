@@ -18,3 +18,7 @@ class CustomUserAdmin(BaseUserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(TriageCase)
+
+admin.site.site_header = "Mental Health Triage System Administration"
+admin.site.site_title = "Mental Health Triage Admin"
+admin.site.index_title = "Welcome to the Mental Health Triage System Admin"
