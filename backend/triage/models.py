@@ -25,7 +25,7 @@ class TriageCase(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} ({self.risk_level})"
+        return f"{self.student} - {self.result} ({self.gender})"
 
 class Feedback(models.Model):
     student = models.ForeignKey('User', on_delete=models.CASCADE, related_name='feedbacks')

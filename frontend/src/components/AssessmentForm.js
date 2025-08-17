@@ -25,12 +25,19 @@ const AssessmentForm = () => {
     }
     setResult(assessmentResult);
 
+    // Validation for result and gender
+    if (!gender || !assessmentResult || typeof assessmentResult !== 'string' || assessmentResult.trim() === '') {
+      setFeedback('❌ Please answer all questions and select your gender.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('authToken');
       if (!token) {
         setFeedback('❌ You must log in as a student before submitting.');
         return;
       }
+      // Use POST request to submit assessment
       const response = await axios.post(
         `${BACKEND_URL}/api/assessment/submit/`,
         { gender, result: assessmentResult },

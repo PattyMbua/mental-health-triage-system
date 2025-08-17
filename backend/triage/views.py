@@ -8,6 +8,7 @@ from .serializers import TriageCaseSerializer, FeedbackSerializer, AppointmentSe
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from rest_framework.permissions import IsAuthenticated
+from .authentication import GoogleJWTAuthentication
 
 class TriageCaseListCreateView(generics.ListCreateAPIView):
     queryset = TriageCase.objects.all()
@@ -23,23 +24,26 @@ class GoogleLoginView(APIView):
                 "982795824735-7h5bc4agela88hotarcrjd0fhse7h5un.apps.googleusercontent.com"
             )
             email = idinfo.get('email')
+            # Identify student by email domain
             if not email or not email.endswith('@strathmore.edu'):
-                return Response({'success': False, 'error': 'Only Strathmore emails are allowed.'}, status=status.HTTP_403_FORBIDDEN)
+                return Response({'success': False, 'error': 'Only Strathmore student accounts are allowed.'}, status=status.HTTP_403_FORBIDDEN)
             google_id = idinfo['sub']
             first_name = idinfo.get('given_name', '')
             last_name = idinfo.get('family_name', '')
+            # Always create as student
             user, created = User.objects.get_or_create(
                 username=email,
                 defaults={
                     'email': email,
                     'first_name': first_name,
                     'last_name': last_name,
-                    'role': 'student',
+                    'role': 'student',  # Force role to student
                     'google_id': google_id,
                 }
             )
             if not created:
                 user.google_id = google_id
+                user.role = 'student'  # Ensure role is student
                 user.save()
             login(request, user)
             return Response({'success': True, 'user_id': user.id})
@@ -47,18 +51,19 @@ class GoogleLoginView(APIView):
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 class AssessmentSubmitView(APIView):
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [GoogleJWTAuthentication]
+    permission_classes = []  # GoogleJWTAuthentication handles permission
 
     def post(self, request):
         student = request.user
         result = request.data.get('result')
         gender = request.data.get('gender')
 
-        if not result or not gender:
-            return Response({'success': False, 'error': 'Missing result or gender.'}, status=400)
+        if not result or not gender or not isinstance(result, str) or result.strip() == '':
+            return Response({'success': False, 'error': 'Missing or invalid result or gender.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if student.role != 'student':
-            return Response({'success': False, 'error': 'Only students can submit assessments.'}, status=403)
+        if not hasattr(student, 'role') or student.role != 'student':
+            return Response({'success': False, 'error': 'Only students can submit assessments.'}, status=status.HTTP_403_FORBIDDEN)
 
         if "Psychologist" in result:
             assigned = User.objects.filter(role='psychologist', gender=gender).first()
@@ -70,7 +75,7 @@ class AssessmentSubmitView(APIView):
             gender=gender,
             assigned_to=assigned
         )
-        return Response({'success': True, 'case_id': case.id}, status=201)
+        return Response({'success': True, 'case_id': case.id}, status=status.HTTP_201_CREATED)
 
 class MentorCasesView(APIView):
     permission_classes = [IsAuthenticated]
@@ -107,26 +112,16 @@ class UsernamePasswordLoginView(APIView):
         return Response({'success': False, 'message': 'Invalid credentials or role.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class FeedbackDashboardView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        # Students see their feedback, mentors/psychologists see all
-        if request.user.role == 'student':
-            feedbacks = Feedback.objects.filter(student=request.user)
-        else:
-            feedbacks = Feedback.objects.all()
-        serializer = FeedbackSerializer(feedbacks, many=True)
-        return Response(serializer.data)
+    authentication_classes = [GoogleJWTAuthentication]
+    permission_classes = []
 
     def post(self, request):
-        # Students can submit feedback
-        if request.user.role != 'student':
-            return Response({'success': False, 'error': 'Only students can submit feedback.'}, status=403)
-        serializer = FeedbackSerializer(data={**request.data, 'student': request.user.id})
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'success': True, 'feedback': serializer.data})
-        return Response({'success': False, 'error': serializer.errors}, status=400)
+        student = request.user
+        message = request.data.get('message')
+        if not message or not hasattr(student, 'role') or student.role != 'student':
+            return Response({'success': False, 'error': 'Only students can submit feedback and message is required.'}, status=403)
+        feedback = Feedback.objects.create(student=student, message=message)
+        return Response({'success': True, 'feedback': feedback.id})
 
 class AppointmentView(APIView):
     permission_classes = [IsAuthenticated]
