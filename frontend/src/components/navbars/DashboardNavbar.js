@@ -26,17 +26,14 @@ const DashboardNavbar = ({ userProp }) => {
       <div className="dashboard-right">
         <div className="welcome">{user ? `Welcome, ${user.name}` : "Welcome"}</div>
 
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+
         <div className="user-dropdown">
           <button className="avatar-btn" onClick={() => setOpen(!open)}>
             {firstLetter || 'U'}
           </button>
-
-          {open && (
-            <ul className="dropdown-menu" onMouseLeave={() => setOpen(false)}>
-              <li><button onClick={() => { navigate('/profile'); setOpen(false); }}>Profile</button></li>
-              <li><button onClick={handleLogout}>Logout</button></li>
-            </ul>
-          )}
         </div>
       </div>
     </nav>

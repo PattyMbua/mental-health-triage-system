@@ -6,33 +6,36 @@ import Home from './pages/Home';
 import Resources from './pages/Resources';
 import ScheduleAppointment from './components/ScheduleAppointment';
 import AssessmentForm from './components/AssessmentForm';
-
-// adjust imports to reflect your folder moves:
-import DashboardStudent from './pages/dashboards/DashboardStudent';
+import Feedback from './components/feedback/Feedback';
 import DashboardMentor from './pages/dashboards/DashboardMentor';
 import DashboardPsychologist from './pages/dashboards/DashboardPsychologist';
+import DashboardStudent from './pages/dashboards/DashboardStudent';
 
-import Navbar from './components/navbars/Navbar'; // new path if moved
+
+import Navbar from './components/navbars/Navbar';
 
 function AppWrapper() {
   const location = useLocation();
-  // hide global navbar on any dashboard route (add others as needed)
-  const hideGlobalNavbar = location.pathname.startsWith('/student-dashboard')
-    || location.pathname.startsWith('/mentor-dashboard')
-    || location.pathname.startsWith('/psychologist-dashboard');
+
+  // hide global navbar on all dashboards
+  const hideNavbar =
+    location.pathname.startsWith('/dashboardStudent') ||
+    location.pathname.startsWith('/dashboardMentor') ||
+    location.pathname.startsWith('/dashboardPsychologist');
 
   return (
     <>
-      {!hideGlobalNavbar && <Navbar />}
+      {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/student-dashboard" element={<DashboardStudent />} />
-        <Route path="/mentor-dashboard" element={<DashboardMentor />} />
-        <Route path="/psychologist-dashboard" element={<DashboardPsychologist />} />
         <Route path="/schedule" element={<ScheduleAppointment />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/assessment" element={<AssessmentForm />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/dashboardStudent" element={<DashboardStudent/>}/>
+        <Route path="/dashboardMentor" element={<DashboardMentor/>}/>
+         <Route path="/dashboardPsychologist" element={<DashboardPsychologist/>}/>
       </Routes>
     </>
   );
