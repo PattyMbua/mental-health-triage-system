@@ -10,25 +10,21 @@ const PsychologistLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setFeedback("");
-
     try {
-      const response = await fetch(`${BACKEND_URL}/api/login/`, {
+      const response = await fetch(`${BACKEND_URL}/api/auth/psychologist-login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-
       const data = await response.json();
 
-      if (response.ok && data.user.role === "psychologist") {
+      if (response.ok && data.user && data.user.role === "psychologist") {
         localStorage.setItem("userRole", "psychologist");
-        localStorage.setItem("authToken", data.token);
-
+        localStorage.setItem("authToken", data.token || "");
         setFeedback(`✅ Welcome, ${data.user.name || data.user.id}`);
         window.location.href = "/DashboardPsychologist";
       } else {
-        setFeedback(`❌ Login failed: ${data.message || "Invalid credentials"}`);
+        setFeedback(`❌ Login failed: ${data.error || data.message || "Invalid credentials"}`);
       }
     } catch (error) {
       setFeedback(`❌ Login failed: ${error.message || "Network error"}`);

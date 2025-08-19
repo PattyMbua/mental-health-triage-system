@@ -23,7 +23,7 @@ const Signup = () => {
       const response = await fetch(`${BACKEND_URL}/api/signup/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId, fullName, email, role: "student" }),
+        body: JSON.stringify({ studentId, fullName, email }),
       });
 
       const data = await response.json();
@@ -55,9 +55,9 @@ const Signup = () => {
           <input
             id="studentId"
             type="text"
+            placeholder="Student ID"
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
-            placeholder="Student ID"
             required
           />
           <label htmlFor="fullName" className="sr-only">

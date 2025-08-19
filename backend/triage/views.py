@@ -134,3 +134,74 @@ class AppointmentView(APIView):
             serializer.save()
             return Response({'success': True, 'appointment': serializer.data})
         return Response({'success': False, 'error': serializer.errors}, status=400)
+
+class StudentLoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user and user.role == 'student':
+            # You may want to generate a token here for session management
+            return Response({'success': True, 'user_id': user.id})
+        return Response({'success': False, 'error': 'Invalid credentials or not a student.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class MentorLoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user and getattr(user, 'role', None) == 'mentor':
+            return Response({
+                'success': True,
+                'user': {
+                    'id': user.id,
+                    'name': user.get_full_name() or user.username
+                }
+            })
+        return Response({'success': False, 'error': 'Invalid credentials or not a mentor.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class PsychologistLoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user and getattr(user, 'role', None) == 'psychologist':
+            return Response({
+                'success': True,
+                'user': {
+                    'id': user.id,
+                    'name': user.get_full_name() or user.username,
+                    'role': user.role
+                }
+            })
+        return Response({'success': False, 'error': 'Invalid credentials or not a psychologist.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class StudentSignupView(APIView):
+    def post(self, request):
+        student_id = request.data.get('studentId')
+        full_name = request.data.get('fullName')
+        email = request.data.get('email')
+
+        # Basic validation
+        if not student_id or not full_name or not email:
+            return Response({'message': 'Please fill in all fields.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Only allow Strathmore emails
+        if not email.endswith('@strathmore.edu'):
+            return Response({'message': 'Email must be a Strathmore email.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            return Response({'message': 'A user with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create user with role='student'
+        user = User.objects.create(
+            username=student_id,
+            email=email,
+            full_name=full_name,
+            role='student'
+        )
+        user.set_unusable_password()
+        user.save()
+
+        return Response({'message': 'Sign up successful!'}, status=status.HTTP_201_CREATED)

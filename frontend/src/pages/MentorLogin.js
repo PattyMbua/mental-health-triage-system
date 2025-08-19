@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./Login.css";
 
 const BACKEND_URL = "http://localhost:8000";
@@ -8,30 +9,28 @@ const MentorLogin = () => {
   const [password, setPassword] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleMentorLogin = async (e) => {
     e.preventDefault();
     setFeedback("");
 
     try {
-      const response = await fetch(`${BACKEND_URL}/api/login/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const response = await axios.post(
+        `${BACKEND_URL}/api/auth/mentor-login/`,
+        { username, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      const data = await response.json();
-
-      if (response.ok && data.user.role === "mentor") {
+      if (response.data.success) {
+        localStorage.setItem("authToken", response.data.token || "dummy-token");
         localStorage.setItem("userRole", "mentor");
-        localStorage.setItem("authToken", data.token);
 
-        setFeedback(`✅ Welcome, ${data.user.name || data.user.id}`);
+        setFeedback(`✅ Welcome, ${response.data.user.name || username}`);
         window.location.href = "/DashboardMentor";
       } else {
-        setFeedback(`❌ Login failed: ${data.message || "Invalid credentials"}`);
+        setFeedback(`❌ ${response.data.error}`);
       }
     } catch (error) {
-      setFeedback(`❌ Login failed: ${error.message || "Network error"}`);
+      setFeedback("❌ Login failed.");
     }
   };
 
@@ -39,7 +38,7 @@ const MentorLogin = () => {
     <div className="login-page">
       <div className="login-card">
         <h2>Mentor Login</h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleMentorLogin}>
           <input
             type="text"
             value={username}
@@ -54,7 +53,9 @@ const MentorLogin = () => {
             placeholder="Password"
             required
           />
-          <button type="submit">Login</button>
+          <button type="submit" className="login-btn">
+            Login
+          </button>
         </form>
         {feedback && <p className="feedback">{feedback}</p>}
         <p className="privacy-note">Your data is secure and confidential.</p>
