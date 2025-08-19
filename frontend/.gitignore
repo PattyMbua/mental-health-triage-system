@@ -24,3 +24,4 @@ yarn-error.log*
 
 # ignore environment config
 .env
+mockBackend/
