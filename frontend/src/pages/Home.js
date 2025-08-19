@@ -1,10 +1,19 @@
-import React from 'react';
-import './Home.css';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Home.css";
 
 const Home = () => {
   return (
     <div className="home-container">
+      <header className="header">
+        <nav className="nav">
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/login/student" className="nav-link">Take Assessment</Link>
+          <Link to="/resources" className="nav-link">Resources</Link>
+          <Link to="/faq" className="nav-link">FAQs</Link>
+        </nav>
+      </header>
+
       <section className="hero">
         <div className="hero-text">
           <h1>Strathmore Mental Health Triage System</h1>
@@ -15,26 +24,27 @@ const Home = () => {
 
       <section className="services">
         <div className="service-card">
-          <h2>📝 Self-Assessment</h2>
-          <p>Answer a few quick questions to find out what kind of support you may need.</p>
-          <Link to="/login">
-            <button className="home-button">Take Assessment</button>
+          <h2>👨‍🎓 Student Login</h2>
+          <p>Log in as a student to access triage, appointments, and resources.</p>
+          <Link to="/login/student">
+            <button className="home-button">Log In</button>
+          </Link>
+          <p className="signup-link">New? <Link to="/signup">Sign Up</Link></p>
+        </div>
+
+        <div className="service-card">
+          <h2>👥 Mentor Login</h2>
+          <p>Log in as a mentor to receive cases and track follow-ups.</p>
+          <Link to="/login/mentor">
+            <button className="home-button">Log In</button>
           </Link>
         </div>
 
         <div className="service-card">
-          <h2>📅 Book Appointment</h2>
-          <p>Schedule a session with a mentor or psychologist who can help.</p>
-          <Link to="/login">
-            <button className="home-button">Book Now</button>
-          </Link>
-        </div>
-
-        <div className="service-card">
-          <h2>📚 Mental Health Resources</h2>
-          <p>View articles, self-care tips, and wellness tools 24/7.</p>
-          <Link to="/resources">
-            <button className="home-button">Explore</button>
+          <h2>🩺 Psychologist Login</h2>
+          <p>Log in as a psychologist to view notes and manage sessions.</p>
+          <Link to="/login/psychologist">
+            <button className="home-button">Log In</button>
           </Link>
         </div>
       </section>

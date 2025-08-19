@@ -8,14 +8,37 @@ body {
 
 /* Container to avoid navbar overlap */
 .home-container {
-  padding-top: 80px;
   min-height: 100vh;
 }
 
-/* Hero Section */
+/* Header/Nav Bar (Dark Blue, Right-Aligned) */
+.header {
+  background-color: #003366;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-size: 1rem;
+}
+
+.nav-link:hover {
+  color: #0066cc;
+}
+
+/* Hero Section (Image Styling from Screenshot - Blue Blend, White Text Overlay) */
 .hero {
   background: url('../assets/mental-health-2019924_1920.jpg') center/cover no-repeat;
-  background-color: rgba(0, 102, 204, 0.8); /* fallback color */
+  background-color: rgba(0, 102, 204, 0.8); /* Blue overlay for the toned look */
   background-blend-mode: multiply;
   padding: 80px 20px;
   text-align: center;
@@ -25,6 +48,11 @@ body {
 .hero-text h1 {
   font-size: 36px;
   margin-bottom: 10px;
+}
+
+.hero-text p {
+  font-size: 1.1rem;
+  margin-top: 0;
 }
 
 .helpline {
@@ -38,9 +66,10 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
   padding: 40px;
+  padding-top: 100px; /* To clear the fixed nav */
 }
 
-/* Card Styling */
+/* Card Styling (Rounded Corners from Screenshot) */
 .service-card {
   background: white;
   padding: 25px;
@@ -54,14 +83,19 @@ body {
   margin-bottom: 10px;
 }
 
-/* Button Styling */
+.signup-link {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+/* Button Styling (Blue Rounded from Screenshot) */
 .home-button {
   padding: 12px 24px;
   background-color: #0066cc;
   color: white;
   font-size: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 20px; /* More rounded like in screenshot */
   cursor: pointer;
   margin-top: 15px;
   transition: background-color 0.3s ease;
@@ -69,4 +103,21 @@ body {
 
 .home-button:hover {
   background-color: #004a99;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 10px;
+  }
+  .services {
+    padding: 20px;
+    padding-top: 80px;
+  }
+  .header {
+    justify-content: center;
+  }
+  .nav-link {
+    margin: 0 0.5rem;
+  }
 }

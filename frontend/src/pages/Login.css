@@ -3,7 +3,7 @@ body, html {
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: #f5f8fc; /* light background */
+  background: #f5f8fc;
 }
 
 .login-page {
@@ -24,18 +24,12 @@ body, html {
   text-align: center;
 }
 
-.login-card img {
-  width: 80px;
-  margin-bottom: 1rem;
-}
-
 .login-card h2 {
   margin-bottom: 1.5rem;
   color: #003366;
 }
 
-.login-card input,
-.login-card select {
+.login-card input {
   width: 100%;
   padding: 10px;
   margin-bottom: 1rem;
@@ -63,4 +57,15 @@ body, html {
   margin-top: 1rem;
   color: #d32f2f;
   font-size: 0.9rem;
+}
+
+.privacy-note {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* For Google Login Wrapper */
+.google-login-wrapper {
+  margin-bottom: 2rem;
 }
