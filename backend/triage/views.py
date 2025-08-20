@@ -9,6 +9,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from rest_framework.permissions import IsAuthenticated
 from .authentication import GoogleJWTAuthentication
+from django.contrib.auth.hashers import make_password
 
 class TriageCaseListCreateView(generics.ListCreateAPIView):
     queryset = TriageCase.objects.all()
@@ -176,32 +177,37 @@ class PsychologistLoginView(APIView):
             })
         return Response({'success': False, 'error': 'Invalid credentials or not a psychologist.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-class StudentSignupView(APIView):
+
+class SignupView(APIView):
     def post(self, request):
-        student_id = request.data.get('studentId')
-        full_name = request.data.get('fullName')
-        email = request.data.get('email')
+        data = request.data
+        username = data.get('username')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+        password = data.get('password')
 
-        # Basic validation
-        if not student_id or not full_name or not email:
-            return Response({'message': 'Please fill in all fields.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Check for required fields
+        if not username or not first_name or not last_name or not email or not password:
+            return Response({'message': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Only allow Strathmore emails
-        if not email.endswith('@strathmore.edu'):
-            return Response({'message': 'Email must be a Strathmore email.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Username must not contain spaces
+        if ' ' in username:
+            return Response({'message': 'Username must not contain spaces.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if user already exists
+        # Check for duplicate username/email
+        if User.objects.filter(username=username).exists():
+            return Response({'message': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
         if User.objects.filter(email=email).exists():
-            return Response({'message': 'A user with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create user with role='student'
+        # Create user
         user = User.objects.create(
-            username=student_id,
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
             email=email,
-            full_name=full_name,
+            password=make_password(password),
             role='student'
         )
-        user.set_unusable_password()
-        user.save()
-
-        return Response({'message': 'Sign up successful!'}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'Signup successful!'}, status=status.HTTP_201_CREATED)

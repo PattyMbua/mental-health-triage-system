@@ -10,7 +10,7 @@ from .views import (
     StudentLoginView,
     MentorLoginView,
     PsychologistLoginView,
-    StudentSignupView,
+    SignupView,
 )
 
 urlpatterns = [
@@ -24,5 +24,5 @@ urlpatterns = [
     path('auth/student-login/', StudentLoginView.as_view(), name='student-login'),
     path('auth/mentor-login/', MentorLoginView.as_view(), name='mentor-login'),
     path('auth/psychologist-login/', PsychologistLoginView.as_view(), name='psychologist-login'),
-    path('signup/', StudentSignupView.as_view(), name='student-signup'),
+    path('signup/', SignupView.as_view(), name='student-signup'),
 ]
