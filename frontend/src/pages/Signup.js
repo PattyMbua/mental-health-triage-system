@@ -8,14 +8,47 @@ const Signup = () => {
   const [studentId, setStudentId] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [feedback, setFeedback] = useState("");
+
+  const validatePassword = (password, studentId, email) => {
+    const minLength = 8;
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const isWeak = password.length < minLength || !hasSpecialChar || password.includes(studentId) || password === email;
+
+    let feedbackMessage = "";
+    if (password.length < minLength) feedbackMessage += "Password must be at least 8 characters. ";
+    if (!hasSpecialChar) feedbackMessage += "Password must include a special character (e.g., !@#$%). ";
+    if (password.includes(studentId)) feedbackMessage += "Password cannot contain your Student ID. ";
+    if (password === email) feedbackMessage += "Password cannot be your email address. ";
+    return { isWeak, feedbackMessage };
+  };
+
+  const validateFullName = (fullName) => {
+    const nameWords = fullName.trim().split(/\s+/).filter(word => word.length > 0);
+    const isInvalid = nameWords.length < 2; // Check for at least two words
+    let feedbackMessage = "";
+    if (isInvalid) feedbackMessage = "Full Name must include at least two words (e.g., First and Last Name).";
+    return { isInvalid, feedbackMessage };
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setFeedback("");
 
-    if (!studentId || !fullName || !email) {
+    const { isWeak, feedbackMessage: passwordFeedback } = validatePassword(password, studentId, email);
+    const { isInvalid: nameInvalid, feedbackMessage: nameFeedback } = validateFullName(fullName);
+
+    if (!studentId || !fullName || !email || !password) {
       setFeedback("❌ Please fill in all fields.");
+      return;
+    }
+    if (isWeak) {
+      setFeedback(`❌ ${passwordFeedback}`);
+      return;
+    }
+    if (nameInvalid) {
+      setFeedback(`❌ ${nameFeedback}`);
       return;
     }
 
@@ -23,7 +56,7 @@ const Signup = () => {
       const response = await fetch(`${BACKEND_URL}/api/signup/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId, fullName, email }),
+        body: JSON.stringify({ studentId, fullName, email, password }),
       });
 
       const data = await response.json();
@@ -80,6 +113,17 @@ const Signup = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Strathmore Email"
+            required
+          />
+          <label htmlFor="password" className="sr-only">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
             required
           />
           <button type="submit">Sign Up</button>
