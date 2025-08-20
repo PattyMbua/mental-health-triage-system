@@ -16,8 +16,10 @@ import Signup from './pages/Signup';
 
 
 
-import Navbar from './components/navbars/Navbar';
 
+
+import Navbar from './components/navbars/Navbar';
+import DashboardNavbar from './components/navbars/DashboardNavbar';
 function AppWrapper() {
   const location = useLocation();
 
@@ -43,6 +45,8 @@ function AppWrapper() {
         <Route path="/login/mentor" element={<MentorLogin />} />
         <Route path="/login/psychologist" element={<PsychologistLogin />} />
         <Route path="/signUp" element={<Signup />} />
+        <Route path="/navbar" element={<Navbar />} />
+        <Route path="/dashboardNavbar" element={<DashboardNavbar />} />
       </Routes>
     </>
   );
