@@ -9,6 +9,7 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [feedback, setFeedback] = useState("");
 
   const validatePassword = (password, studentId, email) => {
@@ -26,7 +27,7 @@ const Signup = () => {
 
   const validateFullName = (fullName) => {
     const nameWords = fullName.trim().split(/\s+/).filter(word => word.length > 0);
-    const isInvalid = nameWords.length < 2; // Check for at least two words
+    const isInvalid = nameWords.length < 2;
     let feedbackMessage = "";
     if (isInvalid) feedbackMessage = "Full Name must include at least two words (e.g., First and Last Name).";
     return { isInvalid, feedbackMessage };
@@ -39,7 +40,7 @@ const Signup = () => {
     const { isWeak, feedbackMessage: passwordFeedback } = validatePassword(password, studentId, email);
     const { isInvalid: nameInvalid, feedbackMessage: nameFeedback } = validateFullName(fullName);
 
-    if (!studentId || !fullName || !email || !password) {
+    if (!studentId || !fullName || !email || !password || !confirmPassword) {
       setFeedback("❌ Please fill in all fields.");
       return;
     }
@@ -49,6 +50,10 @@ const Signup = () => {
     }
     if (nameInvalid) {
       setFeedback(`❌ ${nameFeedback}`);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setFeedback("❌ Passwords do not match. Please confirm your password.");
       return;
     }
 
@@ -124,6 +129,17 @@ const Signup = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            required
+          />
+          <label htmlFor="confirmPassword" className="sr-only">
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
             required
           />
           <button type="submit">Sign Up</button>
