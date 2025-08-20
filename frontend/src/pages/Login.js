@@ -13,6 +13,8 @@ const Login = () => {
   const handleStudentLogin = async (e) => {
     e.preventDefault();
     try {
+      // Add this line to verify the URL
+      console.log(`${BACKEND_URL}/api/auth/student-login/`);
       const response = await axios.post(
         `${BACKEND_URL}/api/auth/student-login/`,
         { username, password },
