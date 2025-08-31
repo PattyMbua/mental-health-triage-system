@@ -3,9 +3,8 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import "./Login.css";
 
-// Replace with your partner's IP and port (e.g., http://192.168.1.100:8000)
-const BACKEND_URL = "http://<partner_ip>:8000"; // Update with the actual IP
 
+const BACKEND_URL = "http://localhost:8000";
 const StudentLogin = () => {
   const [feedback, setFeedback] = useState("");
   const [studentId, setStudentId] = useState("");

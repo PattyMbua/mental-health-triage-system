@@ -12,6 +12,7 @@ from .views import (
     PsychologistLoginView,
     SignupView,
 )
+from .views import mentor_sessions, mentor_availability, pending_requests, handle_request
 
 urlpatterns = [
     path('auth/google-login/', GoogleLoginView.as_view(), name='google-login'),
@@ -25,4 +26,8 @@ urlpatterns = [
     path('auth/mentor-login/', MentorLoginView.as_view(), name='mentor-login'),
     path('auth/psychologist-login/', PsychologistLoginView.as_view(), name='psychologist-login'),
     path('signup/', SignupView.as_view(), name='student-signup'),
+    path('api/mentor/sessions/', mentor_sessions),
+    path('api/mentor/availability/', mentor_availability),
+    path('api/mentor/pending-requests/', pending_requests),
+    path('api/mentor/request/<int:request_id>/', handle_request),
 ]

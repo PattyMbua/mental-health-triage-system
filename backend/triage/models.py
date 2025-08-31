@@ -33,6 +33,17 @@ class Feedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     # Optionally add rating, mentor/psychologist, etc.
 
+class MentorAvailability(models.Model):
+    mentor = models.ForeignKey(User, on_delete=models.CASCADE)
+    available_date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+class SessionRequest(models.Model):
+    student = models.ForeignKey(User, related_name='requests', on_delete=models.CASCADE)
+    mentor = models.ForeignKey(User, related_name='mentor_requests', on_delete=models.CASCADE)
+    requested_date = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('declined', 'Declined')], default='pending')
 class Appointment(models.Model):
     URGENCY_CHOICES = (
         ('non-clinical', 'Non-clinical'),

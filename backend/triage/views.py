@@ -1,13 +1,16 @@
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import login, authenticate
 from .models import User, TriageCase, Feedback, Appointment
-from .serializers import TriageCaseSerializer, FeedbackSerializer, AppointmentSerializer
+from .models import MentorAvailability, SessionRequest
+from .serializers import TriageCaseSerializer, FeedbackSerializer, AppointmentSerializer, MentorAvailabilitySerializer, SessionRequestSerializer
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from .authentication import GoogleJWTAuthentication
 from django.contrib.auth.hashers import make_password
 
@@ -47,7 +50,13 @@ class GoogleLoginView(APIView):
                 user.role = 'student'  # Ensure role is student
                 user.save()
             login(request, user)
-            return Response({'success': True, 'user_id': user.id})
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'success': True,
+                'user_id': user.id,
+                'token': str(refresh.access_token),
+                'refresh': str(refresh)
+            })
         except Exception as e:
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -85,6 +94,53 @@ class MentorCasesView(APIView):
         cases = TriageCase.objects.filter(assigned_to=mentor)
         serializer = TriageCaseSerializer(cases, many=True)
         return Response(serializer.data)
+
+
+# Mentor Dashboard APIs
+@api_view(['GET'])
+def mentor_sessions(request):
+    mentor = request.user
+    sessions = SessionRequest.objects.filter(mentor=mentor, status='accepted')
+    serializer = SessionRequestSerializer(sessions, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST', 'GET'])
+@permission_classes([IsAuthenticated])
+def mentor_availability(request):
+    mentor = request.user
+    if request.method == 'POST':
+        serializer = MentorAvailabilitySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(mentor=mentor)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    else:
+        slots = MentorAvailability.objects.filter(mentor=mentor)
+        serializer = MentorAvailabilitySerializer(slots, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def pending_requests(request):
+    mentor = request.user
+    requests = SessionRequest.objects.filter(mentor=mentor, status='pending')
+    serializer = SessionRequestSerializer(requests, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def handle_request(request, request_id):
+    action = request.data.get('action')
+    try:
+        session_request = SessionRequest.objects.get(id=request_id, mentor=request.user)
+        if action == 'accept':
+            session_request.status = 'accepted'
+        elif action == 'decline':
+            session_request.status = 'declined'
+        session_request.save()
+        return Response({'success': True, 'status': session_request.status})
+    except SessionRequest.DoesNotExist:
+        return Response({'error': 'Request not found'}, status=404)
 
 class PsychologistCasesView(APIView):
     permission_classes = [IsAuthenticated]
@@ -142,8 +198,13 @@ class StudentLoginView(APIView):
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
         if user and user.role == 'student':
-            # You may want to generate a token here for session management
-            return Response({'success': True, 'user_id': user.id})
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'success': True,
+                'user_id': user.id,
+                'token': str(refresh.access_token),
+                'refresh': str(refresh)
+            })
         return Response({'success': False, 'error': 'Invalid credentials or not a student.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class MentorLoginView(APIView):
